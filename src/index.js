@@ -1,8 +1,21 @@
 import Postmate from 'postmate';
 
-
+/**
+ * An abstract class that has to be implemented by Plugin Handlers.
+ *
+ * A Plugin Handler is just an object used by plugins to communicate with
+ * the plugins slots available in the UI.
+ *
+ * For each kind of plugin slot available in the UI, we need to implement a
+ * PluginHandler that will be used to read the plugin settings and expose the
+ * interface that the plugin has to expose with the plugin slot.
+ */
 class PluginHandler {
 
+  /**
+   * Build a handler to deal with a given type of Plugin Slot.
+   * @param options an Object with the plugin configuration (varies on a plugin basis).
+   */
   constructor (options) {
     this.options = options
   }
