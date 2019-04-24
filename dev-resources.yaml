@@ -26,7 +26,7 @@ Resources:
             Action: 's3:GetObject'
             Effect: Allow
             Resource:
-              Fn::Sub: '${PluginLibraryBucket.Arn}/*'
+              Fn::Sub: '${PluginLibraryBucket.Arn}/britecore-ui-plugins.js'
             Principal: '*'
           - Sid: Allow CodeBuild Role write access
             Action: 's3:*'
