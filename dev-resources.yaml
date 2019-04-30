@@ -44,6 +44,41 @@ Resources:
               AWS:
                 Fn::ImportValue: CodeBuildRole
 
+  OriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: Allow access to secure s3 bucket
+
+  CloudFrontCDN:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        PriceClass: "PriceClass_100"
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+        Origins:
+          - Id:
+              Ref: OriginAccessIdentity
+            DomainName:
+              Fn::GetAtt: [PluginLibraryBucket, DomainName]
+            S3OriginConfig:
+              OriginAccessIdentity:
+                Fn::Join:
+                  - '/'
+                  - - origin-access-identity
+                    - cloudfront
+                    - Ref: OriginAccessIdentity
+        DefaultCacheBehavior:
+          Compress: true
+          ForwardedValues:
+            QueryString: true
+          TargetOriginId:
+            Ref: PluginLibraryBucket
+          ViewerProtocolPolicy: redirect-to-https
+
   PackageBuild:
     Type: AWS::CodeBuild::Project
     Properties:
