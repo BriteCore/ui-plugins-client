@@ -61,7 +61,7 @@ Resources:
           CloudFrontDefaultCertificate: true
         Origins:
           - Id:
-              Ref: OriginAccessIdentity
+              Ref: PluginLibraryBucket
             DomainName:
               Fn::GetAtt: [PluginLibraryBucket, DomainName]
             S3OriginConfig:
