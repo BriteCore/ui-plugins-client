@@ -55,7 +55,7 @@ extensions in.
 
 ### button-row
 
-The `button-row` slot allows you to plug in action buttons right next to forms.
+The `button-row` slot allows you to plug in action buttons on various pages.
 Such buttons get the form data as a parameter so that they can do computations,
 third party services lookups, validations, etc. As a result, they have to send a
 [JSON Patch](http://jsonpatch.com/) object specifying which fields in the form they
