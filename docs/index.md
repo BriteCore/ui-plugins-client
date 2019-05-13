@@ -26,9 +26,8 @@ Keep reading this document in order to get more details on the steps above.
 
 ## Plugin Slots
 
-**Plugin Slots** are pre-defined spots across BriteCore UI where you can connect your
-plugins. BriteCore provides multiple slots, allowing you to plug in your functionality
-in specific parts of the system.
+**Plugin Slots** are pre-defined sections of the BriteCore's UI where third-parties can connect
+their plugins.
 
 For example, BriteCore provides a plugin slot called `britequote:risk-edit:button-row`,
 which lets users add custom action buttons into the quoting form. The screenshot below
@@ -56,7 +55,7 @@ extensions in.
 
 ### button-row
 
-The `button-row` slot allows you to plug in action buttons right next to forms.
+The `button-row` slot allows you to plug in action buttons on various pages.
 Such buttons get the form data as a parameter so that they can do computations,
 third party services lookups, validations, etc. As a result, they have to send a
 [JSON Patch](http://jsonpatch.com/) object specifying which fields in the form they
