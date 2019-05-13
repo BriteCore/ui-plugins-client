@@ -231,8 +231,3 @@ That's it, now if you go to the Quoting form, you should be able to interact wit
 new button there:
 
 ![](assets/examples-1.png)
-
-
-## References
-
-- [BriteUIPlugins repo](https://github.com/IntuitiveWebSolutions/BriteUIPlugins)
