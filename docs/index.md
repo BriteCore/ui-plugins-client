@@ -27,7 +27,7 @@ Keep reading this document in order to get more details on the steps above.
 ## Plugin Slots
 
 **Plugin Slots** are pre-defined sections of the BriteCore's UI where third-parties can connect their  ```
-plugins. BriteCore provides multiple slots, allowing you to plug in your functionality
+plugins.
 in specific parts of the system.
 
 For example, BriteCore provides a plugin slot called `britequote:risk-edit:button-row`,
