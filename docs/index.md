@@ -55,11 +55,9 @@ extensions in.
 
 ### button-row
 
-The `button-row` slot allows you to plug in action buttons on various pages.
-Such buttons get the form data as a parameter so that they can do computations,
-third party services lookups, validations, etc. As a result, they have to send a
-[JSON Patch](http://jsonpatch.com/) object specifying which fields in the form they
-want to update.
+The `button-row` slot allows you to plug in action buttons on various pages. The slot
+is going to render the buttons that the plugin requested during its initialization and
+will call the plugin callbacks whenever needed.
 
 The image bellow shows the slot with an action button on it:
 
@@ -82,6 +80,20 @@ The image bellow shows the slot with an action button on it:
 
 The callback function must be defined in your plugin file and it will be called whenever
 the button is clicked.
+
+
+#### britequote:risk-edit:button-row
+
+This specific `button-row` instance is placed right next to quoting forms and it allows
+developers to write plugins to read data from a form and send data back to the form.
+
+Such buttons can get the form data as parameters in a `context` object and do any
+computations, third party services lookups, validations, etc. As a result, they can emit an
+`update-risk` event back to BriteCore with a [JSON Patch](http://jsonpatch.com/) object
+specifying which fields in the form they want to update.
+
+Check out the [use case section](#use-case-the-capitalizer-plugin) for more information on
+how to integrate your plugin with this slot.
 
 
 ## The JS Library
