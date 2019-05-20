@@ -5,14 +5,10 @@ A JavaScript library to build user plugins for BriteCore UI.
 
 ## Contacts
 
-### The Team
+### Maintainers
 
-| Role | Name |
-| ---- | ---- |
-| Product Owner | Grant McConnaughey |
-| Scrum Master | Evelyn Pineros|
-| Architect | Grant McConnaughey |
-| Lead Engineer | Valdir Stumm Junior |
+- Grant McConnaughey
+- Valdir Stumm Junior
 
 
 ### Communication
