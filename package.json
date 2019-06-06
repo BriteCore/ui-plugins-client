@@ -5,19 +5,22 @@
   "private": true,
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "serve": "webpack-dev-server"
+    "serve": "webpack-dev-server",
+    "test": "jest"
   },
   "dependencies": {
     "postmate": "^1.5.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.3",
+    "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.0",
-    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-env": "^7.4.5",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.5",
     "eslint": "^5.16.0",
     "eslint-loader": "^2.1.2",
+    "jest": "^24.8.0",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.1",
     "webpack-dev-server": "^3.3.1"

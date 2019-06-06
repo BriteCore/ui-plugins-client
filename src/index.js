@@ -99,3 +99,4 @@ class BriteCorePlugin {
 }
 
 window.BriteCorePlugin = BriteCorePlugin
+export default BriteCorePlugin;
