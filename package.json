@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "serve": "webpack-dev-server",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --collect-coverage"
   },
   "dependencies": {
     "postmate": "^1.5.0"
