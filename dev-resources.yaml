@@ -81,6 +81,36 @@ Resources:
             Ref: PluginLibraryBucket
           ViewerProtocolPolicy: redirect-to-https
 
+  TestBuild:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: UI-Plugins-Client-Test
+      Description: Runs tests against PRs for UI-Plugins-Client
+      Artifacts:
+        Type: NO_ARTIFACTS
+      BadgeEnabled: true
+      ServiceRole:
+        Fn::ImportValue: CodeBuildRole
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/nodejs:10.1.0
+        Type: LINUX_CONTAINER
+      Cache:
+        Type: S3
+        Location:
+          Fn::Sub:
+           - ${bucketName}/ui-plugins-client-test-cache
+           - bucketName:
+               Fn::ImportValue: CodeArtifactsBucket
+      Source:
+        BuildSpec: testspec.yaml
+        Location: https://github.com/IntuitiveWebSolutions/UI-Plugins-Client.git
+        Type: GITHUB
+        Auth:
+          Type: OAUTH
+      Triggers:
+        Webhook: true
+
   PackageBuild:
     Type: AWS::CodeBuild::Project
     Properties:
@@ -139,6 +169,22 @@ Resources:
                   Fn::GetAtt: [GitHubToken, Value]
               OutputArtifacts:
                 - Name: SourceArtifact
+        - Name: Test
+          Actions:
+            - Name: Run-Tests
+              RunOrder: 1
+              InputArtifacts:
+                - Name: SourceArtifact
+              ActionTypeId:
+                Category: Test
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName:
+                  Ref: TestBuild
+              OutputArtifacts:
+                - Name: TestArtifact
         - Name: Build
           Actions:
             - Name: Build-Library
