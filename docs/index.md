@@ -36,8 +36,9 @@ to be loaded into:
 
 ![](assets/plugins-1.png)
 
-Each Plugin Slot type may have instances spread in multiple spots in the UI. For example,
-the `button-row` slot could be available in different places across the system:
+Each Plugin Slot type may have instances spread in multiple spots in the UI and standard format
+for naming is `{product}:{page}:{slot-type}`. For example, the `button-row` slot could be
+available in different places across the system:
 
 - `britequote:risk-edit:button-row`
 - `britelines:risk-edit:button-row`
@@ -45,6 +46,11 @@ the `button-row` slot could be available in different places across the system:
 
 This way, when connecting your plugin to BriteCore you have to specify to which specific
 Plugin Slot instance you want to connect.
+
+In addition to the type, each slot can have different location on the same page. 
+Plugin Slot location controls where the slot is displayed on the page. For instance,
+`britequote:risk-edit:button-row` plugin slot in the image above is placed in a `sidebar`
+of the quoting form.
 
 
 ## Plugin Slots Reference
@@ -67,6 +73,9 @@ The image bellow shows the slot with an action button on it:
 #### Details
 - **Slot type:** `button-row`.
 - **Slot instances in the UI:** `britequote:risk-edit:button-row`.
+- **Slot locations:**
+  - **`sidebar`** of the quoting form.
+  - **`bottom-row`** of the first page.
 - **Interface:** requires an object like this on initialization:
 
 ```js
@@ -84,13 +93,22 @@ the button is clicked.
 
 #### britequote:risk-edit:button-row
 
-This specific `button-row` instance is placed right next to quoting forms and it allows
-developers to write plugins to read data from a form and send data back to the form.
+The `button-row` slot type allows developers to write plugins to read data from a page,
+pass it to plugins and send new data back to the page.
 
-Such buttons can get the form data as parameters in a `context` object and do any
+Such buttons can get the data as parameters in a `context` object and do any
 computations, third party services lookups, validations, etc. As a result, they can emit an
-`update-risk` event back to BriteCore with a [JSON Patch](http://jsonpatch.com/) object
-specifying which fields in the form they want to update.
+events back to BriteCore with new data and make required updates.
+
+The `button-row` slot type is currently available in two locations:
+
+- In the **`sidebar`** next to quoting forms it reads data from a form, pass it to plugin
+and emits `update-risk` event back with a [JSON Patch](http://jsonpatch.com/) object
+specifying which fields in the form should be updated.
+- In the **`bottom-row`** of the first page this button allows to create new risk instances.
+It gets data from the page pass it to plugin and emits `create-and-update-risk` event.
+This event receives an array of objects each of which contains data that is required 
+to creates new risk.
 
 Check out the [use case section](#use-case-the-capitalizer-plugin) for more information on
 how to integrate your plugin with this slot.
@@ -232,6 +250,10 @@ the following data:
 
 - **Name**: `Capitalizer`.
 - **Base URL**: leave empty and the correct URL will be automatically set.
+
+Add a new **Plugin Slot Location** instance::
+
+- **Type**: `sidebar`.
 
 Then, add a new **Plugin Slot** instance:
 
