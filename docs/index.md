@@ -110,8 +110,21 @@ which emits an `update-risk` event back with a [JSON Patch](http://jsonpatch.com
 specifying which fields in the form should be updated.
 - In the **`bottom-row`** of the first page: it allows to create new risk instances.
 It gets data from the page, pass it to the plugin, which emits `create-and-update-risk` event.
-This event receives an array of objects each of which contains data that is required 
-to creates new risk.
+
+  In the `context` object, the plugin receives:
+
+  - **`riskTypes`**: an array of all available Risk Types. Each has its `id`, `label`, `name`
+  and `parentRiskTypeId`.
+  - **`rootRiskQuote`**: object which holds all information about the Root Quote,
+  such as `risk_state` object, `risk_type_state` object and all child quote objects. 
+  
+  The `create-and-update-risk` event receives an array of objects each of which contains data
+  that is required to creates new risk:
+  
+  - **`parentRiskQuote`**: Risk Quote object that is parent to the new risk to be created.
+  - **`riskType`**: Risk Type object which describes of which type new risk to be created.
+  - **`jsonPatch`**: object specifying which fields should be updated, and a data to be
+  filled in the fields of the newly created risk.
 
 Check out the [use case section](#use-case-the-capitalizer-plugin) for more information on
 how to integrate your plugin with this slot.
