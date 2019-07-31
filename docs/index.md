@@ -103,42 +103,47 @@ computations, third party services lookups, validations, etc. As a result, they 
 events back to BriteCore UI with new data. Then, the latter can apply the changes
 on the data used by the page.
 
+#### Locations
+
 The `button-row` slot type is currently available in two locations:
 
-- In the **`sidebar`** next to quoting forms: it reads data from a form, pass it to the plugin
-which emits an `update-risk` event back with a [JSON Patch](http://jsonpatch.com/) object
-specifying which fields in the form should be updated.
+- **sidebar**
+
+  In the **`sidebar`** next to quoting forms: it reads data from a form, pass it to the plugin
+  which emits an `update-risk` event back with a [JSON Patch](http://jsonpatch.com/) object
+  specifying which fields in the form should be updated.
 
   In the `context` object from BriteCore UI the plugin receives:
-
-  - **`riskState`**: Is an object which describes currently editing risk. It contains
+  - **`riskState`**: a JSON object representing the risk being edited. It contains
   information about Fields and Items along with other information about this risk.
-  - **`quote`**: Is an object which holds general information about currently editing quote.
+  - **`quote`**: an object which holds general information about currently editing quote.
   Along with other information it includes `quote_number`, `product_name` and `root_risk_quote_id`.
+
+  Emmited events:
+  - The **`update-risk`** event receives a `jsonPatch` object:
+      - **`jsonPatch`**: Is an object specifying which fields of the currently editing `riskState`
+      should be updated, and the new values for these fields.
   
-  The `update-risk` event receives `jsonPatch` object:
+- **bottom-row**
   
-  - **`jsonPatch`**: Is an object specifying which fields of the currently editing `riskState`
-  should be updated, and a data to be filled in these fields.
-  
-- In the **`bottom-row`** of the first page: it allows to create new risk instances.
-It gets data from the page, pass it to the plugin, which emits `create-and-update-risk` event.
+  In the **`bottom-row`** of the first page: it allows to create new risk instances.
+  It gets data from the page, pass it to the plugin, which emits `create-and-update-risk` event.
 
   In the `context` object from BriteCore UI the plugin receives:
-
-  - **`riskTypes`**: Is an array of all available Risk Types. Each has its `id`, `label`, `name`
+  - **`riskTypes`**: an array containing all the available Risk Types. Each has its `id`, `label`, `name`
   and `parentRiskTypeId`.
-  - **`rootRiskQuote`**: Risk Quote object combines information about Risk in a Quote and contains data
+  - **`rootRiskQuote`**: a Risk Quote object combining information about a Risk in a Quote. It contains data
   such as `riskState` object, `riskTypeState` object and all child Risk Quote objects. Root Risk Quote here
-  represents main Risk Quote object.
+  represents the main Risk Quote object.
   
-  The `create-and-update-risk` event receives an array of objects each of which contains data
-  that is required to creates new risk:
-  
-  - **`parentRiskQuote`**: Risk Quote object which is parent to the new risk to be created.
-  - **`riskType`**: Risk Type object which describes of which type new risk to be created.
-  - **`jsonPatch`**: object specifying which fields should be updated, and a data to be
-  filled in the fields of the newly created risk.
+  Emmited events:
+  - The **`create-and-update-risk`** event receives an array of objects containing the data
+  required to create a new risks. Each of these object should contain:
+    - **`parentRiskQuote`**: Risk Quote object which should be the parent for the new risk
+    that is going to be created.
+    - **`riskType`**: Risk Type object which describes the type for new risk.
+    - **`jsonPatch`**: object specifying which fields should be updated, as well as the values
+    for these fields in the new risk.
 
 Check out the [use case section](#use-case-the-capitalizer-plugin) for more information on
 how to integrate your plugin with this slot.
