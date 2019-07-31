@@ -26,7 +26,7 @@ A JavaScript library to build user plugins for BriteCore UI.
 
 ```
 $ git clone git@github.com:{username}/UI-Plugins-Client.git
-$ cd ui-plugins-client
+$ cd UI-Plugins-Client
 ```
 
 3. Add any git remotes:
