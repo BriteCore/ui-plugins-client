@@ -33,6 +33,10 @@ $ cd UI-Plugins-Client
 
 ```
 $ git iws init
+
+$ git fetch upstream
+
+$ git branch -u upstream/master
 ```
 
 4. Install all the dependencies:
