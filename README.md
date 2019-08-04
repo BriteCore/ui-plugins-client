@@ -35,7 +35,7 @@ $ cd UI-Plugins-Client
 $ git iws init
 ```
 
-4. Make local `master` branch track `upstream/master`
+4. Make local `master` branch track `upstream/master`:
 
 ```
 $ git fetch upstream
