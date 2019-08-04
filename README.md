@@ -33,25 +33,29 @@ $ cd UI-Plugins-Client
 
 ```
 $ git iws init
+```
 
+4. Make local `master` branch track `upstream/master`
+
+```
 $ git fetch upstream
 
 $ git branch -u upstream/master
 ```
 
-4. Install all the dependencies:
+5. Install all the dependencies:
 
 ```
 $ yarn install
 ```
 
-4. Spin up the development server:
+6. Spin up the development server:
 
 ```
 $ yarn run serve
 ```
 
-5. Alternatively, you can run this command to build the project and serve it in another way:
+7. Alternatively, you can run this command to build the project and serve it in another way:
 
 ```
 $ yarn run build
