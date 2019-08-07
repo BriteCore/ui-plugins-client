@@ -25,8 +25,8 @@ A JavaScript library to build user plugins for BriteCore UI.
 2. Clone your fork of the repo on your local machine and go into the directory:
 
 ```
-$ git clone git@github.com:{YOUR_GITHUB_USERNAME}/ui-plugins-client.git
-$ cd ui-plugins-client
+$ git clone git@github.com:{username}/UI-Plugins-Client.git
+$ cd UI-Plugins-Client
 ```
 
 3. Add any git remotes:
@@ -35,19 +35,27 @@ $ cd ui-plugins-client
 $ git iws init
 ```
 
-4. Install all the dependencies:
+4. Make local `master` branch track `upstream/master`:
+
+```
+$ git fetch upstream
+
+$ git branch -u upstream/master
+```
+
+5. Install all the dependencies:
 
 ```
 $ yarn install
 ```
 
-4. Spin up the development server:
+6. Spin up the development server:
 
 ```
 $ yarn run serve
 ```
 
-5. Alternatively, you can run this command to build the project and serve it in another way:
+7. Alternatively, you can run this command to build the project and serve it in another way:
 
 ```
 $ yarn run build
