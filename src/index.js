@@ -51,10 +51,14 @@ class PluginHandler {
  */
 function handleResponse({ slotIndex, response }) {
   let slot = ResponseSlots.get(slotIndex)
+
   if (slot) {
     slot.response = response
     slot.waitNotify.notify()
+    return
   }
+
+  throw new Error("Response slot missing")
 }
 
 /**
@@ -75,7 +79,7 @@ function handleError({ slotIndex, error }) {
     return
   }
 
-  throw new Error("")
+  throw new Error("Response slot missing")
 }
 
 class ButtonRowHandler extends PluginHandler {
