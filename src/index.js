@@ -106,8 +106,6 @@ class ButtonRowHandler extends PluginHandler {
   getOptions() {
     for (let button of this.options.buttons) {
       button.callback = button.callback.name
-      button.handleResponse = "handleResponse"
-      button.handleError = "handleError"
     }
 
     return this.options
@@ -141,7 +139,11 @@ class BriteCorePlugin {
     for (let key of Object.keys(options)) {
       let handler = new this.handlers[key](options[key])
       model = { ...model, ...handler.getModel() }
-      options[key] = handler.getOptions()
+      options[key] = {
+        handleResponse: handleResponse.name,
+        handleError: handleError.name,
+        ...handler.getOptions()
+      }
     }
 
     const handshake = new Postmate.Model(model)
