@@ -85,3 +85,5 @@ typings/
 
 # build output
 dist/
+
+.idea/
