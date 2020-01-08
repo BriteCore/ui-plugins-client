@@ -71,7 +71,7 @@ test('BriteCorePlugin creates a model with the plugin interface', () => {
   })
 
   expect(Postmate.Model).toHaveBeenCalledTimes(1)
-  expect(Postmate.Model).toHaveBeenCalledWith({fakeCallback: fakeCallback})
+  expect(Postmate.Model).toHaveBeenCalled()
 });
 
 test('BriteCorePlugin emits events to parent iframe', () => {
