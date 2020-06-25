@@ -38,6 +38,15 @@ class PluginHandler {
   getModel() {
     return {}
   }
+
+  /**
+   * Handle any updates to the context passed into the plugin.
+   * @param context an Object representing the state passed into the plugin.
+   */
+  handleContextUpdate(context, parent) {
+    this.lastContext = context
+    this.parent = parent
+  }
 }
 
 /**
@@ -103,12 +112,20 @@ class ButtonRowHandler extends PluginHandler {
    *
    * @returns {object}
    */
-  getOptions() {
-    for (let button of this.options.buttons) {
-      button.callback = button.callback.name
-    }
-
-    return this.options
+  getOptions(context) {
+    return {
+      ...this.options,
+      buttons: this.options.buttons.map((button) => {
+        return {
+          ...button,
+          callback: button.callback.name,
+          visible:
+            context && button.visible ? button.visible(context) : false,
+          enabled:
+            context && button.enabled ? button.enabled(context) : true,
+        };
+      }),
+    };
   }
 
   /**
@@ -126,6 +143,13 @@ class ButtonRowHandler extends PluginHandler {
 
     return obj
   }
+
+  handleContextUpdate(context, parent) {
+    super.handleContextUpdate(context, parent)
+
+    let buttons = this.getOptions(context).buttons
+    parent.emit("buttons-updated", buttons)
+  }
 }
 
 
@@ -135,11 +159,23 @@ class BriteCorePlugin {
   }
 
   initialize(options) {
-    let model = {}
+    let contextUpdate = (context) => {
+      for (let key of Object.keys(this.pluginHandlers)) {
+        let handler = this.pluginHandlers[key]
+        handler.handleContextUpdate(context, this.parent)
+      }
+    }
+
+    let model = {"contextUpdate": contextUpdate}
+    let modifiedOptions = {}
+    this.pluginHandlers = {}
+
     for (let key of Object.keys(options)) {
       let handler = new this.handlers[key](options[key])
+      this.pluginHandlers[key] = handler
+
       model = { ...model, ...handler.getModel() }
-      options[key] = {
+      modifiedOptions[key] = {
         handleResponse: handleResponse.name,
         handleError: handleError.name,
         ...handler.getOptions()
@@ -150,9 +186,11 @@ class BriteCorePlugin {
 
     // When parent <-> child handshake is complete, events may be emitted to the parent
     handshake.then(parent => {
-      for (let key of Object.keys(options)) {
+      this.parent = parent
+
+      for (let key of Object.keys(modifiedOptions)) {
         let eventName = 'initialized-' + key
-        parent.emit(eventName, options[key])
+        parent.emit(eventName, modifiedOptions[key])
       }
     })
   }
