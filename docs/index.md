@@ -163,7 +163,7 @@ And then you'll be able to use the `BriteCorePlugin` helper so that your plugin 
 communicate with BriteCore:
 
 ```js
-  let p = new BriteCorePlugin()
+  let p = new BriteCorePlugin('Plugin Name')
   p.initialize({
     'slot-name': slotInput
   })
@@ -174,7 +174,7 @@ to connect to. For example, let's say that you want to connect to the `button-ro
 and send it a single button:
 
 ```js
-  let p = new BriteCorePlugin()
+  let p = new BriteCorePlugin('Plugin Name')
   p.initialize({
     'button-row': {
       buttons: [{
@@ -246,7 +246,7 @@ This is how the Capitalizer plugin would look like:
         this.emit('update-risk', jsonPatch)
       }
 
-      let p = new BriteCorePlugin()
+      let p = new BriteCorePlugin('Capitalizer')
       p.initialize({
         'button-row': {
           buttons: [{
