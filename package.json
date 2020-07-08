@@ -1,8 +1,7 @@
 {
   "name": "@intuitivewebsolutions/ui-plugins-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "src/index.js",
-  "private": true,
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "serve": "webpack-dev-server",
