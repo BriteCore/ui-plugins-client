@@ -1,5 +1,5 @@
 {
-  "name": "britecore-ui-plugins",
+  "name": "@intuitivewebsolutions/ui-plugins-client",
   "version": "0.1.0",
   "main": "src/index.js",
   "private": true,
@@ -7,7 +7,8 @@
     "build": "webpack --config webpack.config.js",
     "serve": "webpack-dev-server",
     "test": "jest",
-    "coverage": "jest --collect-coverage"
+    "coverage": "jest --collect-coverage",
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.6",
