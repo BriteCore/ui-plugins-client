@@ -154,6 +154,11 @@ class ButtonRowHandler extends PluginHandler {
 
 
 class BriteCorePlugin {
+
+  constructor(name) {
+    this.name = name
+  }
+
   handlers = {
     'button-row': ButtonRowHandler
   }
@@ -176,6 +181,7 @@ class BriteCorePlugin {
 
       model = { ...model, ...handler.getModel() }
       modifiedOptions[key] = {
+        pluginName: this.name,
         handleResponse: handleResponse.name,
         handleError: handleError.name,
         ...handler.getOptions()
