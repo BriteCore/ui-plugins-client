@@ -67,7 +67,7 @@ function handleResponse({ slotIndex, response }) {
     return
   }
 
-  throw new Error("Response slot missing")
+  throw new Error('Response slot missing')
 }
 
 /**
@@ -88,7 +88,7 @@ function handleError({ slotIndex, error }) {
     return
   }
 
-  throw new Error("Response slot missing")
+  throw new Error('Response slot missing')
 }
 
 class ButtonRowHandler extends PluginHandler {
@@ -144,11 +144,11 @@ class ButtonRowHandler extends PluginHandler {
     return obj
   }
 
-  handleContextUpdate(context, parent) {
+  handleContextUpdate(context, parent, pluginName) {
     super.handleContextUpdate(context, parent)
 
     let buttons = this.getOptions(context).buttons
-    parent.emit("buttons-updated", buttons)
+    parent.emit(pluginName + '-buttons-updated', buttons)
   }
 }
 
@@ -167,11 +167,11 @@ class BriteCorePlugin {
     let contextUpdate = (context) => {
       for (let key of Object.keys(this.pluginHandlers)) {
         let handler = this.pluginHandlers[key]
-        handler.handleContextUpdate(context, this.parent)
+        handler.handleContextUpdate(context, this.parent, this.name)
       }
     }
 
-    let model = {"contextUpdate": contextUpdate}
+    let model = {'contextUpdate': contextUpdate}
     let modifiedOptions = {}
     this.pluginHandlers = {}
 
@@ -195,7 +195,7 @@ class BriteCorePlugin {
       this.parent = parent
 
       for (let key of Object.keys(modifiedOptions)) {
-        let eventName = 'initialized-' + key
+        let eventName = this.name + '-initialized-' + key
         parent.emit(eventName, modifiedOptions[key])
       }
     })
@@ -213,8 +213,9 @@ class BriteCorePluginRequest {
    *
    * @param {object} child - PostMate ChildAPI object
    */
-  constructor(child) {
+  constructor(child, pluginName) {
     this.child = child
+    this.pluginName = pluginName
   }
 
   /**
@@ -230,7 +231,7 @@ class BriteCorePluginRequest {
     const waitNotify = new WaitNotify()
     const slotIndex = ResponseSlots.create(waitNotify)
 
-    this.child.emit('request', {
+    this.child.emit(this.pluginName + '-request', {
       request: { method, ...data },
       slotIndex
     })
