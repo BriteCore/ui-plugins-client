@@ -1,4 +1,4 @@
-import BriteCorePlugin from './index'
+import {BriteCorePlugin} from './index'
 import Postmate from 'postmate'
 
 function fakePromise () {
