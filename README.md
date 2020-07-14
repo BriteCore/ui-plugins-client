@@ -2,63 +2,46 @@
 
 A JavaScript library to build user plugins for BriteCore UI.
 
-
-## Contacts
-
-### Maintainers
-
-- Grant McConnaughey
-- Valdir Stumm Junior
-
-
-### Communication
+## Communication
 
 **Slack channel:** [#pd-ui-plugins-int](https://britecore.slack.com/messages/CJ2P5KJ22/)
 
-
 ## Getting Started
+
+### Usage
+
+1. Create `.npmrc` file in the root directory of your plugin project and fill with:
+
+    ```bash
+    @intuitivewebsolutions:registry=https://npm.pkg.github.com/
+    //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+    ```
+
+2. Generate a GitHub token with packages read permission and export it as `GITHUB_TOKEN`
+
+    ```bash
+    export GITHUB_TOKEN=<YOUR_GENERATED_TOKEN>
+    npm install @intuitivewebsolutions/ui-plugins-client
+    ```
 
 ### Setting up a Dev Environment
 
-1. On GitHub, fork this repo by clicking the Fork button in the GitHub UI.
+1. Install all the dependencies:
 
-2. Clone your fork of the repo on your local machine and go into the directory:
+    ```bash
+    yarn install
+    # or npm install
+    ```
 
-```
-$ git clone git@github.com:{username}/UI-Plugins-Client.git
-$ cd UI-Plugins-Client
-```
+2. Spin up the development server:
 
-3. Add any git remotes:
+    ```bash
+    yarn serve
+    # or npm run serve
+    ```
 
-```
-$ git iws init
-```
+3. Alternatively, you can run this command to build the project and serve it in another way:
 
-4. Make local `master` branch track `upstream/master`:
-
-```
-$ git fetch upstream
-
-$ git branch -u upstream/master
-```
-
-5. Install all the dependencies:
-
-```
-$ yarn install
-```
-
-6. Spin up the development server:
-
-```
-$ yarn run serve
-```
-
-7. Alternatively, you can run this command to build the project and serve it in another way:
-
-```
-$ yarn run build
-```
-
-Now you can make changes to the [library source file](./src/index.js) and then a bundle version of it will be generated in `dist/britecore-ui-plugins.js`.
+    ```bash
+    yarn build
+    ```

@@ -322,4 +322,4 @@ class ResponseSlots {
 
 window.BriteCorePluginRequest = BriteCorePluginRequest
 window.BriteCorePlugin = BriteCorePlugin
-export default BriteCorePlugin;
+export {BriteCorePlugin, BriteCorePluginRequest};
