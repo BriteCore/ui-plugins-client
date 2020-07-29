@@ -171,7 +171,8 @@ class BriteCorePlugin {
       }
     }
 
-    let model = {'contextUpdate': contextUpdate}
+    let model = {}
+    model[this.name + '-contextUpdate'] = contextUpdate
     let modifiedOptions = {}
     this.pluginHandlers = {}
 
