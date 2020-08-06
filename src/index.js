@@ -194,6 +194,7 @@ class BriteCorePlugin {
     // When parent <-> child handshake is complete, events may be emitted to the parent
     handshake.then(parent => {
       this.parent = parent
+      model.parent = parent
 
       for (let key of Object.keys(modifiedOptions)) {
         let eventName = this.name + '-initialized-' + key
