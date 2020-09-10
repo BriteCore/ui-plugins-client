@@ -221,7 +221,26 @@ class BriteCorePluginRequest {
   }
 
   /**
-   * An helper function for initiating requests.
+   * A helper function for initiating requests the the datamapping service.
+   *
+   * It waits for a response or error from BriteCore UI and resumes when
+   * a corresponding reponse or error is available.
+   *
+   * @param {string} from - The name of the service being mapped from.
+   * @param {string} to - The name of the service being mapped to.
+   * @param {object} data - The data payload to be mapped.
+   */
+  async makeMappingRequest(from, to, data) {
+    const url = `/map/?from=${from}&to=${to}`
+    const payload = {
+      url,
+      data
+    }
+    return await this.makeRequest('post', payload, 'mapping')
+  }
+
+  /**
+   * A helper function for initiating requests.
    *
    * It waits for a response or error from BriteCore UI and resumes when
    * a corresponding reponse or error is available.
@@ -229,12 +248,12 @@ class BriteCorePluginRequest {
    * @param {string} method - The method of the request.
    * @param {object} data - Object containing arguments Axios expects.
    */
-  async makeRequest(method, data) {
+  async makeRequest(method, data, type = 'integration') {
     const waitNotify = new WaitNotify()
     const slotIndex = ResponseSlots.create(waitNotify)
 
     this.child.emit(this.pluginName + '-request', {
-      request: { method, ...data },
+      request: { method, type, ...data },
       slotIndex
     })
 
