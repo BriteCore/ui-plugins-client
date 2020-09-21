@@ -236,7 +236,7 @@ class BriteCorePluginRequest {
       url,
       data
     }
-    return await this.makeRequest('post', payload, 'mapping')
+    return await this.makeRequest('post', payload)
   }
 
   /**
