@@ -231,12 +231,12 @@ class BriteCorePluginRequest {
    * @param {object} data - The data payload to be mapped.
    */
   async makeMappingRequest(from, to, data) {
-    const url = `/map/?from=${from}&to=${to}`
+    const url = `/datamapping/map/?from=${from}&to=${to}`
     const payload = {
       url,
       data
     }
-    return await this.makeRequest('post', payload, 'mapping')
+    return await this.makeRequest('post', payload)
   }
 
   /**
