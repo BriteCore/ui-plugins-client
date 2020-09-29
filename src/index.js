@@ -229,9 +229,10 @@ class BriteCorePluginRequest {
    * @param {string} from - The name of the service being mapped from.
    * @param {string} to - The name of the service being mapped to.
    * @param {object} data - The data payload to be mapped.
+   * @param {boolean} mapped - Whether to use the "mapped" mode.
    */
-  async makeMappingRequest(from, to, data) {
-    const url = `/datamapping/map/?from=${from}&to=${to}`
+  async makeMappingRequest(from, to, data, mapped = false) {
+    const url = `/datamapping/map/?from=${from}&to=${to}${mapped ? '&mode=mapped' : ''}`
     const payload = {
       url,
       data
