@@ -210,10 +210,10 @@ class BriteCorePlugin {
  */
 class BriteCorePluginRequest {
   /**
-   * BriteCorPluginRequest instance is initialized with a postmate object representing
+   * BriteCorPluginRequest instance is initialized with a Penpal object representing
    * the parent iframe.
    *
-   * @param {object} parent - PostMate ChildAPI object
+   * @param {object} parent - a Penpal object representing the parent iframe. 
    */
   constructor(parent, pluginName) {
     this.parent = parent
