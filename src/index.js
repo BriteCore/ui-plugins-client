@@ -1,4 +1,4 @@
-import Postmate from 'postmate';
+import { connectToParent } from "penpal"
 import WaitNotify from 'wait-notify';
 /**
  * An abstract class that has to be implemented by Plugin Handlers.
@@ -103,7 +103,7 @@ class ButtonRowHandler extends PluginHandler {
    * And will be transformed into:
    * {
    *   buttons: [{
-   *     label: 'Click here',
+   *     text: 'Click here',
    *     callback: 'foo',
    *     handleResponse: 'handleResponse',
    *     handleError: 'handleError'
@@ -144,11 +144,11 @@ class ButtonRowHandler extends PluginHandler {
     return obj
   }
 
-  handleContextUpdate(context, parent, pluginName) {
+  handleContextUpdate(context, parent) {
     super.handleContextUpdate(context, parent)
 
     let buttons = this.getOptions(context).buttons
-    parent.emit(pluginName + '-buttons-updated', buttons)
+    parent.updateButtons(buttons)
   }
 }
 
@@ -167,12 +167,12 @@ class BriteCorePlugin {
     let contextUpdate = (context) => {
       for (let key of Object.keys(this.pluginHandlers)) {
         let handler = this.pluginHandlers[key]
-        handler.handleContextUpdate(context, this.parent, this.name)
+        handler.handleContextUpdate(context, this.parent)
       }
     }
 
     let model = {}
-    model[this.name + '-contextUpdate'] = contextUpdate
+    model['contextUpdate'] = contextUpdate
     let modifiedOptions = {}
     this.pluginHandlers = {}
 
@@ -189,16 +189,16 @@ class BriteCorePlugin {
       }
     }
 
-    const handshake = new Postmate.Model(model)
+    const connection = connectToParent({
+      methods: model
+    })
 
-    // When parent <-> child handshake is complete, events may be emitted to the parent
-    handshake.then(parent => {
+    connection.promise.then(parent => {
       this.parent = parent
       model.parent = parent
 
       for (let key of Object.keys(modifiedOptions)) {
-        let eventName = this.name + '-initialized-' + key
-        parent.emit(eventName, modifiedOptions[key])
+        parent.initializeSlot(modifiedOptions[key])
       }
     })
   }
@@ -210,13 +210,13 @@ class BriteCorePlugin {
  */
 class BriteCorePluginRequest {
   /**
-   * BriteCorPluginRequest instance is initialized with a postmate object representing
-   * the child iframe.
+   * BriteCorPluginRequest instance is initialized with a Penpal object representing
+   * the parent iframe.
    *
-   * @param {object} child - PostMate ChildAPI object
+   * @param {object} parent - a Penpal object representing the parent iframe. 
    */
-  constructor(child, pluginName) {
-    this.child = child
+  constructor(parent, pluginName) {
+    this.parent = parent
     this.pluginName = pluginName
   }
 
@@ -224,7 +224,7 @@ class BriteCorePluginRequest {
    * A helper function for initiating requests the the datamapping service.
    *
    * It waits for a response or error from BriteCore UI and resumes when
-   * a corresponding reponse or error is available.
+   * a corresponding response or error is available.
    *
    * @param {string} from - The name of the service being mapped from.
    * @param {string} to - The name of the service being mapped to.
@@ -244,7 +244,7 @@ class BriteCorePluginRequest {
    * A helper function for initiating requests.
    *
    * It waits for a response or error from BriteCore UI and resumes when
-   * a corresponding reponse or error is available.
+   * a corresponding response or error is available.
    *
    * @param {string} method - The method of the request.
    * @param {object} data - Object containing arguments Axios expects.
@@ -253,7 +253,7 @@ class BriteCorePluginRequest {
     const waitNotify = new WaitNotify()
     const slotIndex = ResponseSlots.create(waitNotify)
 
-    this.child.emit(this.pluginName + '-request', {
+    this.parent.makeRequest({
       request: { method, type, ...data },
       slotIndex
     })
@@ -298,7 +298,7 @@ class BriteCorePluginRequest {
 
 /**
  * ResponseSlots is data structure for storing information about each request so that
- * when a request reponse arrives, the async function that initiated the request
+ * when a request response arrives, the async function that initiated the request
  * resumes and gets the response or error returned from handling the request.
  *
  * `index` is a number that always increases and it is used to give each request a unique key.

@@ -1,13 +1,15 @@
-import {BriteCorePlugin} from './index'
-import Postmate from 'postmate'
+import { BriteCorePlugin } from './index'
+import { connectToParent } from 'penpal'
 
-function fakePromise () {
+jest.mock("penpal")
+
+function fakePromise() {
   return {
     thenFn: null,
     catchFn: null,
     finallyFn: null,
     promise: null,
-    reject (value) {
+    reject(value) {
       if (this.catchFn) {
         value = this.catchFn(value)
       }
@@ -18,7 +20,7 @@ function fakePromise () {
         this.promise.reject(value)
       }
     },
-    resolve (value) {
+    resolve(value) {
       if (this.thenFn) {
         value = this.thenFn(value)
       }
@@ -29,17 +31,17 @@ function fakePromise () {
         this.promise.resolve(value)
       }
     },
-    then (fn) {
+    then(fn) {
       this.thenFn = fn
       this.promise = fakePromise()
       return this.promise
     },
-    catch (fn) {
+    catch(fn) {
       this.catchFn = fn
       this.promise = fakePromise()
       return this.promise
     },
-    finally (fn) {
+    finally(fn) {
       this.finallyFn = fn
       this.promise = fakePromise()
       return this.promise
@@ -47,51 +49,48 @@ function fakePromise () {
   }
 }
 
-jest.mock('Postmate')
-
-
-test('BriteCorePlugin has the "handlers" property', () => {
-  expect(new BriteCorePlugin()).toHaveProperty('handlers')
-  expect(new BriteCorePlugin().handlers).toHaveProperty('button-row')
-});
-
-
-test('BriteCorePlugin creates a model with the plugin interface', () => {
-  let fakeCallback = () => {}
-  Postmate.Model = jest.fn(() => { return fakePromise() })
-
+describe('BriteCorePlugin', () => {
+  const firstButtonCallback = () => { }
+  const secondButtonCallback = () => { }
+  connectToParent.mockImplementation(() => ({ promise: fakePromise() }));
   let p = new BriteCorePlugin()
-  p.initialize({
+  const pluginOptions = {
     'button-row': {
       buttons: [{
-        text: 'Button Label',
-        callback: fakeCallback
-      }]
+        text: 'Button 1',
+        callback: firstButtonCallback
+      }, {
+        text: 'Button 2',
+        callback: secondButtonCallback
+      }
+      ]
     }
-  })
-
-  expect(Postmate.Model).toHaveBeenCalledTimes(1)
-  expect(Postmate.Model).toHaveBeenCalled()
-});
-
-test('BriteCorePlugin emits events to parent iframe', () => {
-  let fakeCallback = () => {}
-  let aPromise = fakePromise()
-  let fakeParent = {
-    emit: jest.fn()
   }
-  Postmate.Model = jest.fn(() => { return aPromise })
+  p.initialize(pluginOptions)
+  const penpalCallArgs = connectToParent.mock.calls[0][0]
 
-  let p = new BriteCorePlugin()
-  p.initialize({
-    'button-row': {
-      buttons: [{
-        text: 'Button Label',
-        callback: fakeCallback
-      }]
-    }
-  })
-  aPromise.resolve(fakeParent)
+  it('should call `connectToParent` method from penpal', () => {
+    expect(connectToParent).toHaveBeenCalledTimes(1)
+  });
 
-  expect(fakeParent.emit).toHaveBeenCalledTimes(1)
-})
+  it('should should have button-row handler', () => {
+    expect(p).toHaveProperty("handlers")
+    expect(p.handlers).toHaveProperty("button-row")
+  });
+
+  it('should expose the request handlers (handleResponse, handleError) to the parent Iframe.', () => {
+    expect(penpalCallArgs).toHaveProperty("methods")
+    expect(penpalCallArgs.methods).toHaveProperty("handleResponse")
+    expect(penpalCallArgs.methods).toHaveProperty("handleError")
+  });
+
+  it('should expose the contextUpdate handler method to the parent Iframe', () => {
+    expect(penpalCallArgs.methods).toHaveProperty("contextUpdate")
+  });
+
+  it('should expose the buttons callbacks to the Parent Iframe', () => {
+    expect(penpalCallArgs.methods).toHaveProperty("firstButtonCallback")
+    expect(penpalCallArgs.methods).toHaveProperty("secondButtonCallback")
+  });
+});
+
