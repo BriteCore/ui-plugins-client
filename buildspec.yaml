@@ -8,7 +8,15 @@ phases:
   build:
     commands:
       - yarn run build
-      - aws s3 cp dist/britecore-ui-plugins.js "s3://$S3_BUCKET" --acl=public-read
+      - |
+        export PACKAGE_VERSION=$(node -pe "require('./package.json').version")
+        aws s3 ls "s3://$S3_BUCKET/$PACKAGE_VERSION/ui-plugins-client.js"
+        if [[ $? -ne 0 ]]; then
+            aws s3 cp dist/britecore-ui-plugins.js "s3://$S3_BUCKET/$PACKAGE_VERSION/ui-plugins-client.js" --acl=public-read
+            echo "published a new version to the CDN: $PACKAGE_VERSION"
+        else
+            echo "version ${PACKAGE_VERSION} is already published."
+        fi
 cache:
   paths:
     - node_modules/**/*
