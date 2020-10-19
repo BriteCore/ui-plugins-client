@@ -242,7 +242,7 @@ class BriteCorePluginRequest {
    * BriteCorPluginRequest instance is initialized with a Penpal object representing
    * the parent iframe.
    *
-   * @param {object} parent - a Penpal object representing the parent iframe. 
+   * @param {object} parent - a Penpal object representing the parent iframe.
    */
   constructor(parent, pluginName) {
     this.parent = parent
@@ -259,10 +259,12 @@ class BriteCorePluginRequest {
    * @param {string} to - The name of the service being mapped to.
    * @param {object} data - The data payload to be mapped.
    * @param {boolean} mapped - Whether to use the "mapped" mode.
+   * @param {string} mode - Mode to use.
    */
-  async makeMappingRequest(from, to, data, mapped = false) {
-    const url = `/datamapping/map/?from=${from}&to=${to}${mapped ? '&mode=mapped' : ''}`
-    const payload = {
+  async makeMappingRequest(from, to, data, mapped = false, mode = 'default') {
+   const _mode = mapped ? 'mapped' : mode
+   const url = `/datamapping/map/?from=${from}&to=${to}&mode=${_mode}`
+   const payload = {
       url,
       data
     }
