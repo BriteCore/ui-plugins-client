@@ -255,7 +255,8 @@ class BriteCorePluginRequest {
 
     this.parent.makeRequest({
       request: { method, type, ...data },
-      slotIndex
+      slotIndex,
+      handleResponse, handleError
     })
 
     await waitNotify.wait()
