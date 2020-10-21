@@ -32,7 +32,7 @@ Resources:
             Action: 's3:GetObject'
             Effect: Allow
             Resource:
-              Fn::Sub: '${PluginLibraryBucket.Arn}/britecore-ui-plugins.js'
+              Fn::Sub: '${PluginLibraryBucket.Arn}/*'
             Principal:
               CanonicalUser:
                 Fn::GetAtt: [OriginAccessIdentity, S3CanonicalUserId]
