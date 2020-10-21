@@ -113,7 +113,7 @@ class ButtonRowHandler extends PluginHandler {
    * @returns {object}
    */
   getOptions(context) {
-    return {
+    const options = {
       ...this.options,
       buttons: this.options.buttons.map((button) => {
         return {
@@ -126,6 +126,8 @@ class ButtonRowHandler extends PluginHandler {
         };
       }),
     };
+
+    return options
   }
 
   /**
@@ -148,10 +150,37 @@ class ButtonRowHandler extends PluginHandler {
     super.handleContextUpdate(context, parent)
 
     let buttons = this.getOptions(context).buttons
-    parent.updateButtons(buttons)
+    if (parent.updateButtons) {
+      parent.updateButtons(buttons) 
+    }
   }
 }
 
+class AutoCompleteHandler extends PluginHandler {
+  getModel() {
+    let callbacks = []
+    for (const input of this.options.inputs) {
+      callbacks.push(input.querySearch, input.handleSelect)
+    } 
+
+    let obj = Object.fromEntries(callbacks.map(cb => [cb.name, cb]))
+
+    return obj
+  }
+
+  getOptions() {
+    return {
+      ...this.options,
+      inputs: this.options.inputs.map((input) => {
+        return {
+          ...input,
+          querySearch: input.querySearch.name,
+          handleSelect: input.handleSelect.name
+        };
+      }),
+    };
+  }
+}
 
 class BriteCorePlugin {
 
@@ -160,46 +189,46 @@ class BriteCorePlugin {
   }
 
   handlers = {
-    'button-row': ButtonRowHandler
+    'button-row': ButtonRowHandler,
+    'auto-complete': AutoCompleteHandler
   }
 
   initialize(options) {
     let contextUpdate = (context) => {
-      for (let key of Object.keys(this.pluginHandlers)) {
-        let handler = this.pluginHandlers[key]
+      for (let key of Object.keys(options)) {
+        let handler = new this.handlers[key](options[key])
         handler.handleContextUpdate(context, this.parent)
       }
     }
 
     let model = {}
     model['contextUpdate'] = contextUpdate
-    let modifiedOptions = {}
     this.pluginHandlers = {}
-
+    
     for (let key of Object.keys(options)) {
       let handler = new this.handlers[key](options[key])
       this.pluginHandlers[key] = handler
-
+      
       model = { ...model, ...handler.getModel() }
-      modifiedOptions[key] = {
-        pluginName: this.name,
-        handleResponse: handleResponse.name,
-        handleError: handleError.name,
-        ...handler.getOptions()
-      }
     }
-
+    
     const connection = connectToParent({
       methods: model
     })
-
-    connection.promise.then(parent => {
+    
+    connection.promise.then(async parent => {
       this.parent = parent
       model.parent = parent
-
-      for (let key of Object.keys(modifiedOptions)) {
-        parent.initializeSlot(modifiedOptions[key])
+      const {handler: handlerKey, context} = await parent.getSlotInfo()
+      let modifiedOptions = {}
+      let handler = new this.handlers[handlerKey](options[handlerKey])
+      modifiedOptions[handlerKey] = {
+        pluginName: this.name,
+        handleResponse: handleResponse.name,
+        handleError: handleError.name,
+        ...handler.getOptions(context)
       }
+      parent.initializeSlot(modifiedOptions[handlerKey])
     })
   }
 }
