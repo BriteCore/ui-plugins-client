@@ -194,7 +194,7 @@ class BriteCorePlugin {
   }
 
   initialize(options) {
-    let contextUpdate = (context) => {
+    let contextUpdate = (_, context) => {
       for (let key of Object.keys(options)) {
         let handler = new this.handlers[key](options[key])
         handler.handleContextUpdate(context, this.parent)
