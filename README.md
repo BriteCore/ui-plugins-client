@@ -24,22 +24,25 @@ Please see our [contributing guidelines](.github/CONTRIBUTING.md)
 
 ### Testing
 
-1. Install all the dependencies:
+1. Install all the dependencies and test:
 
     ```bash
-    yarn install
-    # or npm install
+    npm install
+    npm test
+    # npm run coverage
+    # yarn install
     ```
 
 2. Spin up the development server:
 
     ```bash
-    yarn serve
-    # or npm run serve
+    npm run serve
+    # yarn serve
     ```
 
 3. Alternatively, you can run this command to build the project and serve it in another way:
 
     ```bash
-    yarn build
+    npm run build
+    #yarn build
     ```
