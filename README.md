@@ -2,6 +2,8 @@
 
 A JavaScript library to build user plugins for BriteCore UI
 
+Learn more about [UI Plugins on our help site](https://help.britecore.com/plugins/)
+
 ## Communication
 
 Please see our [contributing guidelines](.github/CONTRIBUTING.md)
