@@ -13,13 +13,13 @@ Please see our [contributing guidelines](.github/CONTRIBUTING.md)
 1. Create `.npmrc` file in the root directory of your plugin project and fill with:
 
     ```bash
-    @intuitivewebsolutions:registry=https://npm.pkg.github.com/
+    @britecore:registry=https://npm.pkg.github.com/
     ```
 
 2. Install by running:
 
     ```
-    npm install @intuitivewebsolutions/ui-plugins-client
+    npm install @britecore/ui-plugins-client
     ```
 
 ### Testing
@@ -44,5 +44,5 @@ Please see our [contributing guidelines](.github/CONTRIBUTING.md)
 
     ```bash
     npm run build
-    #yarn build
+    # yarn build
     ```
