@@ -1,5 +1,5 @@
 name: Test
-on: pull_request:
+on: pull_request
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,6 +9,6 @@ jobs:
       with:
         node-version: '12.x'
         registry-url: 'https://npm.pkg.github.com'
-        scope: '@intuitivewebsolutions'
+        scope: '@britecore'
     - run: npm install
     - run: npm test
