@@ -1,5 +1,5 @@
 {
-  "name": "@intuitivewebsolutions/ui-plugins-client",
+  "name": "@britecore/ui-plugins-client",
   "version": "0.5.1",
   "main": "src/index.js",
   "scripts": {
