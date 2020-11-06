@@ -1,0 +1,167 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+
+  GitHubToken:
+    Type: Custom::SharedSecret
+    Properties:
+      ServiceToken:
+        Fn::ImportValue: BC-CustomResourceProvider
+      Name: /development/github/token
+
+  PluginLibraryBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - "*"
+
+  PluginLibraryBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: PluginLibraryBucket
+      PolicyDocument:
+        Statement:
+          - Sid: Allow CloudFront to access to the JS Library bucket objects
+            Action:
+              - "s3:GetObject"
+            Effect: Allow
+            Resource:
+              Fn::Sub: '${PluginLibraryBucket.Arn}/*'
+            Principal:
+              CanonicalUser:
+                Fn::GetAtt: [OriginAccessIdentity, S3CanonicalUserId]
+          - Sid: Allow CloudFront to access to the JS Library bucket
+            Action:
+              - "s3:ListBucket"
+            Effect: Allow
+            Resource:
+              Fn::Sub: '${PluginLibraryBucket.Arn}'
+            Principal:
+              CanonicalUser:
+                Fn::GetAtt: [OriginAccessIdentity, S3CanonicalUserId]
+          - Sid: Allow CodeBuild Role write access
+            Action: 's3:*'
+            Effect: Allow
+            Resource:
+              - Fn::Sub: '${PluginLibraryBucket.Arn}/*'
+              - Fn::GetAtt: [PluginLibraryBucket, Arn]
+            Principal:
+              AWS:
+                Fn::ImportValue: CodeBuildRole
+
+  OriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: Allow access to secure s3 bucket
+
+  CloudFrontCDN:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        PriceClass: "PriceClass_100"
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+        Origins:
+          - Id:
+              Ref: PluginLibraryBucket
+            DomainName:
+              Fn::GetAtt: [PluginLibraryBucket, DomainName]
+            S3OriginConfig:
+              OriginAccessIdentity:
+                Fn::Join:
+                  - '/'
+                  - - origin-access-identity
+                    - cloudfront
+                    - Ref: OriginAccessIdentity
+        DefaultCacheBehavior:
+          Compress: true
+          ForwardedValues:
+            QueryString: true
+          TargetOriginId:
+            Ref: PluginLibraryBucket
+          ViewerProtocolPolicy: redirect-to-https
+
+  PackageBuild:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: UI-Plugins-Client-Build
+      Description: Ship UI-Plugins-Client/master to a hosted S3 bucket
+      Artifacts:
+        Type: CODEPIPELINE
+      ServiceRole:
+        Fn::ImportValue: CodeBuildRole
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: S3_BUCKET
+            Type: PLAINTEXT
+            Value:
+              Ref: PluginLibraryBucket
+      Cache:
+        Type: S3
+        Location:
+          Fn::Sub:
+           - ${bucketName}/ui-plugins-client-build-cache
+           - bucketName:
+               Fn::ImportValue: CodeArtifactsBucket
+      Source:
+        BuildSpec: buildspec.yaml
+        Type: CODEPIPELINE
+
+  CodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: UI-Plugins-Client-Pipeline
+      ArtifactStore:
+        Type: S3
+        Location:
+          Fn::ImportValue: CodeArtifactsBucket
+      RestartExecutionOnUpdate: true
+      RoleArn:
+        Fn::ImportValue: CodePipelineRole
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: Source
+              RunOrder: 1
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration:
+                Owner: IntuitiveWebSolutions
+                Repo: UI-Plugins-Client
+                Branch: master
+                OAuthToken:
+                  Fn::GetAtt: [GitHubToken, Value]
+              OutputArtifacts:
+                - Name: SourceArtifact
+        - Name: Build
+          Actions:
+            - Name: Build-Library
+              RunOrder: 1
+              InputArtifacts:
+                - Name: SourceArtifact
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName:
+                  Ref: PackageBuild
+              OutputArtifacts:
+                - Name: BuildArtifact
