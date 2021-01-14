@@ -1,6 +1,6 @@
 {
   "name": "@britecore/ui-plugins-client",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",

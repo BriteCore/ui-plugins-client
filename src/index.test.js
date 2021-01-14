@@ -180,7 +180,7 @@ describe('MarkupHandler', () => {
   test('`getOptions` should return default options if not passed', () => {
     const handler = new MarkupHandler({})
     expect(handler.getOptions()).toHaveProperty('template', '<div></div>')
-    expect(handler.getOptions()).toHaveProperty('methods', [])
+    expect(handler.getOptions()).toHaveProperty('methods', ['handleResponse', 'handleError'])
     expect(handler.getOptions()).toHaveProperty('data', {})
   });
 
@@ -192,7 +192,7 @@ describe('MarkupHandler', () => {
 
   test('`getOptions` replaces methods with their own names', () => {
     const handler = new MarkupHandler(options)
-    expect(handler.getOptions().methods).toEqual(['handleClick'])
+    expect(handler.getOptions().methods).toEqual(['handleClick', 'handleResponse', 'handleError'])
   });
 
   test('`getModel` returns the options methods', () => {
