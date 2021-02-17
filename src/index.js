@@ -158,7 +158,7 @@ class ButtonRowHandler extends PluginHandler {
 
 class AutoCompleteHandler extends PluginHandler {
   getModel() {
-    let callbacks = []
+    let callbacks = [handleResponse, handleError]
     for (const input of this.options.inputs) {
       callbacks.push(input.querySearch, input.handleSelect)
     }
