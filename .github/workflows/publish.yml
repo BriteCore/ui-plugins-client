@@ -11,19 +11,19 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-        registry-url: 'https://npm.pkg.github.com'
-        scope: '@britecore'
-    - run: npm install
-    - run: npm publish --ignore-scripts
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-        registry-url: 'https://registry.npmjs.org'
-    - name: Publish
+    - name: Publish to NPM
       run: |
         npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
         npm publish --ignore-scripts --access public
       env:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@britecore'
+    - run: npm install
+    - run: npm publish --ignore-scripts
+      name: Publish to GitHub
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
