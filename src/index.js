@@ -158,7 +158,7 @@ class ButtonRowHandler extends PluginHandler {
 
 class AutoCompleteHandler extends PluginHandler {
   getModel() {
-    let callbacks = []
+    let callbacks = [handleResponse, handleError]
     for (const input of this.options.inputs) {
       callbacks.push(input.querySearch, input.handleSelect)
     }
@@ -186,7 +186,11 @@ class AutoCompleteHandler extends PluginHandler {
 class MarkupHandler extends PluginHandler {
   
   getModel() {
-    return this.options.methods || {}
+    return {
+      ...this.options.methods,
+      handleResponse,
+      handleError
+    } || {}
   }
 
   getOptions() {
@@ -200,6 +204,8 @@ class MarkupHandler extends PluginHandler {
       ...this.options,
       template: `<div>${this.options.template || defaultOptions.template}</div>`,
       methods: Object.keys(this.getModel()),
+      handleResponse: 'handleResponse', // from 'handleResponse' function in PluginHandler,
+      handleError: 'handleError' // from 'handleError' function in PluginHandler
     };
   }
 }
