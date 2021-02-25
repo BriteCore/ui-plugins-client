@@ -13,6 +13,8 @@ jobs:
         node-version: '12.x'
     - name: Publish to NPM
       run: |
+        npm install
+        npm run build
         npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
         npm publish --ignore-scripts --access public
       env:
