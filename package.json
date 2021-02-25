@@ -1,7 +1,9 @@
 {
   "name": "@britecore/ui-plugins-client",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "main": "src/index.js",
+  "module": "src/index.js",
+  "unpkg": "dist/britecore-ui-plugins.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "serve": "webpack-dev-server",
@@ -9,6 +11,10 @@
     "coverage": "jest --collect-coverage",
     "prepublish": "npm run build"
   },
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
   "dependencies": {
     "@babel/runtime": "^7.7.6",
     "penpal": "^5.2.1",
