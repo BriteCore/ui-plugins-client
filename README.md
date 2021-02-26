@@ -12,17 +12,23 @@ Please see our [contributing guidelines](.github/CONTRIBUTING.md)
 
 ### [Installing](https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-npm-for-use-with-github-packages#installing-a-package)
 
-1. Create `.npmrc` file in the root directory of your plugin project and fill with:
-
-    ```bash
-    @britecore:registry=https://npm.pkg.github.com/
-    ```
-
-2. Install by running:
+* Install by running:
 
     ```
     npm install @britecore/ui-plugins-client
     ```
+
+* Use in the browser by adding:
+
+    ```html
+    <script src="https://unpkg.com/@britecore/ui-plugins-client@0.9.2/dist/britecore-ui-plugins.js"></script>
+    ```
+
+    Use the latest
+    `<script src="https://unpkg.com/@britecore/ui-plugins-client"></script>`
+
+    Use a specific version
+    `<script src="https://unpkg.com/@britecore/ui-plugins-client@0.9.2"></script>`
 
 ### Testing
 
