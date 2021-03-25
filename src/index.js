@@ -10,14 +10,19 @@ import WaitNotify from 'wait-notify';
  * PluginHandler that will be used to read the plugin settings and expose the
  * interface that the plugin has to expose with the plugin slot.
  */
-class PluginHandler {
+export class PluginHandler {
 
   /**
    * Build a handler to deal with a given type of Plugin Slot.
    * @param options an Object with the plugin configuration (varies on a plugin basis).
    */
   constructor(options) {
-    this.options = options
+    // extract onContextUpdate if it is passed in the options
+    const {onContextUpdate, ...modifiedOptions} = options
+    if (onContextUpdate && typeof onContextUpdate === "function") {
+      this.onContextUpdate = onContextUpdate
+    }
+    this.options = modifiedOptions
   }
 
   /**
@@ -46,6 +51,9 @@ class PluginHandler {
   handleContextUpdate(context, parent) {
     this.lastContext = context
     this.parent = parent
+    if (this.onContextUpdate && typeof this.onContextUpdate === "function") {
+      this.onContextUpdate(context, parent)
+    }
   }
 }
 

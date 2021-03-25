@@ -1,5 +1,5 @@
-import { BriteCorePlugin, ButtonRowHandler, AutoCompleteHandler, MarkupHandler } from './index'
 import { connectToParent } from 'penpal'
+import { AutoCompleteHandler, BriteCorePlugin, ButtonRowHandler, MarkupHandler, PluginHandler } from './index'
 
 jest.mock("penpal")
 
@@ -36,7 +36,7 @@ describe('BriteCorePlugin', () => {
     expect(connectToParent).toHaveBeenCalledTimes(1)
   });
 
-  it('should should have button-row handler', () => {
+  it('should have button-row handler', () => {
     expect(p).toHaveProperty("handlers")
     expect(p.handlers).toHaveProperty("button-row")
   });
@@ -63,6 +63,23 @@ describe('BriteCorePlugin', () => {
 });
 
 
+describe('PluginHandler', () => {
+
+
+  it('should accept `onContextUpdate` function as an option and call it whenever the context changes', () => {
+    let onContextUpdateMock = jest.fn()
+    const options = {
+      onContextUpdate: onContextUpdateMock
+    }
+    let pluginHandler = new PluginHandler(options)
+    pluginHandler.handleContextUpdate({}, fakeParent)
+    expect(onContextUpdateMock).toHaveBeenCalled()
+    onContextUpdateMock.mockReset()
+    pluginHandler = new PluginHandler({})
+    pluginHandler.handleContextUpdate({}, fakeParent)
+    expect(onContextUpdateMock).toBeCalledTimes(0)
+  })
+})
 
 describe('ButtonRowHandler', () => {
   const buttonCallback1 = () => {}

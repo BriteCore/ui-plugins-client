@@ -1,6 +1,6 @@
 {
   "name": "@britecore/ui-plugins-client",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "main": "src/index.js",
   "module": "src/index.js",
   "unpkg": "dist/britecore-ui-plugins.js",
@@ -8,6 +8,7 @@
     "build": "webpack --config webpack.config.js",
     "serve": "webpack-dev-server",
     "test": "jest",
+    "lint": "eslint src",
     "coverage": "jest --collect-coverage",
     "prepublish": "npm run build"
   },
