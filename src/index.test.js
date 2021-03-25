@@ -1,5 +1,5 @@
-import { connectToParent } from 'penpal';
-import { AutoCompleteHandler, BriteCorePlugin, ButtonRowHandler, MarkupHandler, PluginHandler } from './index';
+import { connectToParent } from 'penpal'
+import { AutoCompleteHandler, BriteCorePlugin, ButtonRowHandler, MarkupHandler, PluginHandler } from './index'
 
 jest.mock("penpal")
 

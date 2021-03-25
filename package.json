@@ -8,6 +8,7 @@
     "build": "webpack --config webpack.config.js",
     "serve": "webpack-dev-server",
     "test": "jest",
+    "lint": "eslint src",
     "coverage": "jest --collect-coverage",
     "prepublish": "npm run build"
   },
