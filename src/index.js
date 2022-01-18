@@ -218,6 +218,28 @@ class MarkupHandler extends PluginHandler {
   }
 }
 
+
+class AutoRunHandler extends PluginHandler {
+  getOptions() {
+    return  {
+      ...this.options,
+      launchers: this.options.launchers.map((launcher) => ({
+        ...launcher,
+        callback: launcher.callback.name
+      })),
+    };
+  }
+
+  getModel() {
+    let callbacks = this.options.launchers
+      .map(launcher => launcher.callback)
+      .concat([handleError, handleResponse])
+
+    return Object.fromEntries(callbacks.map(cb => [cb.name, cb]))
+  }
+}
+
+
 class BriteCorePlugin {
 
   constructor(name) {
@@ -227,7 +249,8 @@ class BriteCorePlugin {
   handlers = {
     'button-row': ButtonRowHandler,
     'auto-complete': AutoCompleteHandler,
-    'markup': MarkupHandler
+    'markup': MarkupHandler,
+    'auto-run': AutoRunHandler
   }
 
   
