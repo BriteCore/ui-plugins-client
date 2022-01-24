@@ -1,5 +1,5 @@
 import { connectToParent } from 'penpal'
-import { AutoCompleteHandler, BriteCorePlugin, ButtonRowHandler, MarkupHandler, PluginHandler } from './index'
+import { AutoCompleteHandler, BriteCorePlugin, ButtonRowHandler, MarkupHandler, PluginHandler, AutoRunHandler } from './index'
 
 jest.mock("penpal")
 
@@ -61,7 +61,6 @@ describe('BriteCorePlugin', () => {
     expect(init).toThrowError(new Error('invalid-key is not a valid option'))
   })
 });
-
 
 describe('PluginHandler', () => {
 
@@ -132,7 +131,6 @@ describe('ButtonRowHandler', () => {
     expect(mockParent.updateButtons).toHaveBeenLastCalledWith(handler.getOptions().buttons)
   })
 })
-
 
 describe('AutoCompleteHandler', () => {
   const querySearch1 = () => {}
@@ -216,4 +214,35 @@ describe('MarkupHandler', () => {
     const handler = new MarkupHandler(options)
     expect(handler.getModel()).toHaveProperty('handleClick', options.methods.handleClick)
   });
+})
+
+describe('AutoRunHandler', () => {
+  const launcherCallback1 = () => {}
+  const launcherCallback2 = () => {}
+  const mockLauncher1 = {
+    callback: launcherCallback1,
+    trigger: 'pageLoad'
+  }
+
+  const mockLauncher2 = {
+    callback: launcherCallback2,
+    trigger: 'pageExit'
+  }
+
+  const handler = new AutoRunHandler({launchers: [mockLauncher1, mockLauncher2]})
+  const options = handler.getOptions()
+
+  test('`getOptions` should replace any method with its name', () => {
+    expect(options.launchers[0].callback).toBe('launcherCallback1')
+  });
+
+  test('`getModel` extracts launcher callbacks and appends request handlers', () => {
+    const model = handler.getModel()
+    expect(model).toHaveProperty('launcherCallback1', launcherCallback1)
+    expect(model).toHaveProperty('launcherCallback2', launcherCallback2)
+    expect(model).toHaveProperty('handleResponse')
+    expect(typeof model.handleResponse).toBe('function')
+    expect(model).toHaveProperty('handleError')
+    expect(typeof model.handleError).toBe('function')
+  })
 })
