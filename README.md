@@ -20,15 +20,11 @@ Please see our [contributing guidelines](.github/CONTRIBUTING.md)
 
 * Use in the browser by adding:
 
-    ```html
-    <script src="https://unpkg.com/@britecore/ui-plugins-client@0.9.2/dist/britecore-ui-plugins.js"></script>
-    ```
-
     Use the latest
     `<script src="https://unpkg.com/@britecore/ui-plugins-client"></script>`
 
     Use a specific version
-    `<script src="https://unpkg.com/@britecore/ui-plugins-client@0.9.2"></script>`
+    `<script src="https://unpkg.com/@britecore/ui-plugins-client@0.10.0"></script>`
 
 ### Testing
 
